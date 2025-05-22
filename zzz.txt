@@ -1,0 +1,79 @@
+Admin
+    DosenController 
+        ingin dapat menambahkan data dosen ke dalam sistem agar informasi dosen selalu terbaru (Done)
+        ingin dapat memperbarui informasi rekognisi dosen agar data tetap akurat. (done) 
+        ingin dapat mengakses sistem rekognisi melalui web agar mudah digunakan tanpa perlu instalasi aplikasi tambahan. (done)
+        akan dapat menambahkan, mengubah, atau menghapus data dosen, agar informasi dosen selalu akurat dan terbaru. (done)
+        ingin dapat menambahkan data dosen jika dosen tersebut belum ada dalam daftar. (done)
+        ingin dapat melihat data semua dosen dari masing-masing program studi (TI dan PDSI) secara terpisah, agar data terorganisasi dengan baik dan memudahkan pengelolaan. (done)
+        ingin dapat melakukan pengelompokan dan pencarian dosen berdasarkan program studi, agar pengelolaan data lebih efisien dan terstruktur. (done)
+        ingin dapat mengisi dan menyimpan data dosen baru seperti nama, NIDN, jabatan, dan foto profil, agar identitas dosen tersimpan dengan lengkap. (done)
+        ingin dapat melakukan update atau penghapusan data dosen jika dibutuhkan, untuk menjaga akurasi data dosen di sistem. (done)
+        ingin dapat mencari nama dosen tertentu melalui fitur pencarian, agar proses pengecekan data lebih cepat. (done)
+    RecognisiController
+        ingin dapat melihat daftar riwayat pengajuan dari semua dosen, untuk keperluan monitoring dan pelaporan. (done)
+        ingin dapat mengelompokkan rekognisi berdasarkan kategori (misalnya penelitian, penghargaan, pengabdian masyarakat) agar mudah dikelola. (done)
+        ingin dapat menghapus data rekognisi dosen yang sudah tidak valid agar sistem tetap bersih.(done)
+        ingin dapat menolak pengajuan rekognisi yang tidak memenuhi syarat agar data tetap berkualitas. (done)
+        ingin dapat memberikan komentar atau umpan balik pada pengajuan rekognisi agar dosen tahu apa yang perlu diperbaiki. (done)
+        akan mendapatkan notifikasi ketika ada permohonan surat tugas yang perlu divalidasi. (done)
+        ingin dapat menampilkan statistik jumlah rekognisi yang telah diajukan dan disetujui agar memudahkan pemantauan. (done)
+            
+                Jadi Satu ->
+                    ingin dapat melihat daftar lengkap rekognisi semua dosen berdasarkan tahun, agar saya bisa melakukan validasi dan pelaporan data akademik dengan mudah.
+                    ingin dapat melihat daftar lengkap publikasi semua dosen berdasarkan tahun, agar saya bisa melakukan validasi dan pelaporan data akademik dengan mudah.
+                    ingin dapat melihat dan mengelola data HKI berdasarkan tahun akademik, agar proses pelaporan institusi berjalan lancar dan akurat.
+                    ingin dapat melihat data pengabdian masyarakat dosen berdasarkan tahun akademik, agar proses pelaporan institusi berjalan lancar dan akurat.
+                    ingin dapat melihat dan mengelola data penelitian dosen berdasarkan tahun akademik, agar proses pelaporan institusi berjalan lancar dan akurat.
+        
+                Lagi Ditanya ->
+                    ingin sistem dapat memproses pengajuan rekognisi dengan cepat agar tidak terjadi keterlambatan dalam verifikasi.
+                    akan dapat memantau status permohonan surat tugas yang diajukan oleh dosen dan memastikan kelengkapan dokumen yang diperlukan.
+                    ingin dapat melihat institusi atau penerbit yang terkait dengan kegiatan dosen, agar dapat mengevaluasi kredibilitas dan dampak kontribusi dosen.
+                    ingin dapat memverifikasi dokumen rekognisi dosen agar hanya data valid yang tercatat dalam sistem
+
+ 
+
+
+
+ingin dapat melihat informasi visi, misi, dan tujuan fakultas, agar saya dapat memahami arah pengembangan institusi.
+ingin dapat mengelola konten pada halaman beranda, seperti visi, misi, dan tujuan fakultas, agar informasi yang ditampilkan selalu relevan.
+ingin dapat membuat dan mengelola template surat tugas agar dosen dapat menggunakan format yang sudah tersedia tanpa harus membuatnya dari awal. 
+
+ingin menginginkan fitur pengingat kepada dosen jika ada pengajuan yang belum lengkap atau perlu diperbarui.
+ingin dapat melakukan backup data rekognisi secara berkala agar tidak kehilangan informasi penting.
+ingin dapat membuat panduan penggunaan sistem agar pengguna tidak mengalami kesulitan saat mengakses fitur.
+ingin dapat mengatur peran pengguna dalam sistem agar hanya orang yang berwenang yang bisa mengelola data.
+ingin dapat mengimpor data rekognisi lama ke dalam sistem baru agar tidak kehilangan histori pencapaian.
+ingin dapat mencetak laporan rekapitulasi rekognisi dalam format PDF atau Excel agar mudah dibagikan ke pihak terkait.
+ingin dapat mengintegrasikan sistem rekognisi dengan database kepegawaian agar tidak perlu input data manual.
+ingin dapat melihat laporan rekapitulasi rekognisi dosen agar saya bisa menganalisis tren pencapaian akademik.
+=================================================
+Dosen 
+dapat mencari dan memeriksa dokumen bukti kegiatan luar kampus dari dosen, agar saya bisa menilai kelayakan pengajuan rekognisi mereka.
+dapat melihat daftar rekognisi saya agar saya bisa mengetahui pencapaian yang sudah tercatat.
+dapat melihat riwayat rekognisi saya per tahun, agar saya dapat memantau aktivitas pengakuan profesional saya dari waktu ke waktu.
+dapat melihat riwayat publikasi saya per tahun, agar saya dapat mengetahui dan mengarsipkan kontribusi ilmiah saya yang telah diterbitkan.
+dapat mengakses bukti rekognisi dan bukti publikasi dengan mudah melalui tombol/link, agar saya dapat memastikan data yang tercatat benar dan lengkap.
+dapat mencari nama saya di daftar riwayat, agar saya bisa langsung menemukan entri saya tanpa harus menggulir halaman.
+dapat melihat riwayat Hak Kekayaan Intelektual (HKI) saya per tahun, agar saya dapat memantau hasil karya cipta saya yang telah tercatat secara resmi.
+dapat melihat riwayat kegiatan pengabdian masyarakat saya, agar saya mengetahui kontribusi sosial saya yang telah terdokumentasi.
+dapat melihat riwayat penelitian saya beserta dana yang diterima, agar saya dapat mengevaluasi output riset saya setiap tahun.
+pengajuan rekognisi bersama dengan rekan dosen lainnya. 
+dapat mengakses dokumen bukti seperti sertifikat, laporan, atau dokumen pendukung lainnya melalui tombol/link "Klik Disini", agar saya dapat memastikan kelengkapan administrasi.
+dapat mengajukan rekognisi baru melalui sistem agar pencapaian saya bisa diakui secara resmi.
+dapat mengunggah bukti pendukung (misalnya sertifikat atau surat keterangan) agar rekognisi saya dapat diverifikasi. 
+dapat menerima notifikasi jika pengajuan rekognisi saya disetujui atau ditolak agar saya segera mengetahui statusnya.
+dapat mencari rekognisi saya berdasarkan tahun atau kategori agar lebih mudah menemukan data yang saya perlukan.
+dapat mengunduh laporan rekognisi saya agar dapat digunakan untuk keperluan administrasi.
+dapat mengedit pengajuan rekognisi sebelum diverifikasi agar saya bisa memperbaiki kesalahan data.
+dapat mengakses sistem rekognisi dari perangkat mobile agar lebih fleksibel dalam pengajuan data.
+mengunduh template untuk memudahkan pengisian pengajuan rekognisi.
+dapat melihat status verifikasi rekognisi saya secara real-time agar saya tidak perlu menanyakan ke admin.
+dapat melihat daftar rekognisi yang pernah diajukan oleh rekan dosen lainnya agar saya bisa mendapatkan referensi.
+dapat mengajukan permohonan surat tugas untuk kegiatan luar kampus dan mengupload bukti kegiatan setelahnya.
+dapat mencari dan meninjau dokumen bukti kegiatan saya.
+dapat melihat informasi visi, misi, dan tujuan fakultas, agar saya dapat memahami arah pengembangan institusi.
+dapat melihat daftar dosen lain di program studi saya, agar saya mengetahui rekan-rekan sejawat yang satu bidang dan bisa berkolaborasi dalam kegiatan tridharma.
+dapat melihat data profil singkat dosen seperti nama, NIDN, dan jabatan fungsional, agar saya bisa mengenal struktur akademik dan senioritas di lingkungan prodi.
+dapat melihat data dosen berdasarkan program studi secara terpisah (TI dan PDSI), agar saya hanya melihat dosen yang relevan dengan bidang saya.
