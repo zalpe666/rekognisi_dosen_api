@@ -157,7 +157,6 @@ class RekognisiController extends Controller
             'data' => $rekognisi
         ], 200);
     }
-
     public function rekognisiByKategori()
     {
         $rekap = DB::table('jenis_rekognisi')

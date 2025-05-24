@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use App\Models\Rekognisi;
-
+use App\Models\RekognisiFile;
+use App\Models\RekognisiKolaborator;
 class DosenController extends Controller
 {
     public function login(Request $request)
@@ -63,12 +64,27 @@ class DosenController extends Controller
             'diterima' => $diterima,
         ]);
     }
-    public function rekognisiSaya($id)
+    public function rekognisiSaya(Request $request, $id)
     {
-        $rekognisi = Rekognisi::with(['dosen', 'kolaborator.dosenKolaborator'])
-            ->where('id_dosen', $id)
-            ->orWhereHas('kolaborator', function ($query) use ($id) {
-                $query->where('id_dosen_kolaborator', $id);
+        $status = $request->status;
+        $tahun = $request->tahun;
+        $type_rekognisi_id = $request->type_rekognisi_id;
+
+        $rekognisi = Rekognisi::with(['dosen'])
+            ->where(function ($query) use ($id) {
+                $query->where('id_dosen', $id)
+                    ->orWhereHas('kolaborator', function ($subQuery) use ($id) {
+                        $subQuery->where('id_dosen_kolaborator', $id);
+                    });
+            })
+            ->when($status, function ($query) use ($status) {
+                $query->where('status_rekognisi', $status);
+            })
+            ->when($tahun, function ($query) use ($tahun) {
+                $query->whereYear('created_at', $tahun);
+            })
+            ->when($type_rekognisi_id, function ($query) use ($type_rekognisi_id) {
+                $query->where('type_rekognisi_id', $type_rekognisi_id);
             })
             ->get();
 
@@ -76,6 +92,65 @@ class DosenController extends Controller
             'rekognisi' => $rekognisi
         ]);
     }
+    public function showRekognisi($id)
+    {
+        $rekognisi = Rekognisi::with([
+            'dosen',
+            'kolaborator.dosenKolaborator',
+            'komentar.admin',
+            'files'
+        ])->findOrFail($id);
+
+        return response()->json($rekognisi);
+
+    }
+    public function storeFile(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'rekognisi_dosen_id' => 'required|exists:rekognisi_dosen,id',
+            'id_dosen' => 'required|exists:dosens,id',
+            'file' => 'required|file|mimes:pdf|max:5120',
+            'nama_file' => 'required|string|max:255', // tambahkan ini
+
+        ]);
+
+        $file = $request->file('file');
+        $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('uploads'), $filename);
+
+        $rekognisiFile = RekognisiFile::create([
+            'rekognisi_dosen_id' => $request->rekognisi_dosen_id,
+            'id_dosen' => $request->id_dosen,
+            'file' => $filename,
+            'nama_file' => $request->nama_file, // simpan ke DB
+        ]);
+
+        return response()->json([
+            'message' => 'Rekognisi dosen berhasil ditambahkan',
+            'data' => $rekognisiFile,
+            'url' => asset('uploads/' . $filename),
+        ], 201);
+    }
+    public function tambahKolaborator(Request $request)
+    {
+        $request->validate([
+            'rekognisi_dosen_id' => 'required|exists:rekognisi_dosen,id',
+            'id_dosen_kolaborator' => 'required|exists:dosens,id',
+        ]);
+
+        $kolaborator = RekognisiKolaborator::create([
+            'rekognisi_dosen_id' => $request->rekognisi_dosen_id,
+            'id_dosen_kolaborator' => $request->id_dosen_kolaborator,
+        ]);
+
+        return response()->json([
+            'message' => 'Kolaborator berhasil ditambahkan',
+            'data' => $kolaborator,
+        ], 201);
+    }
+
+
 
 
 }

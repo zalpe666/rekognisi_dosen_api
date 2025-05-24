@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
+use App\Models\RekognisiKomentar;
 
 use Illuminate\Http\Request;
 
@@ -235,6 +236,25 @@ class AdminController extends Controller
         return response()->json([
             'message' => 'Data rekognisi berhasil dihapus secara soft delete'
         ]);
+    }
+    public function storeKomentar(Request $request)
+    {
+        $request->validate([
+            'rekognisi_dosen_id' => 'required|exists:rekognisi_dosen,id',
+            'id_admin' => 'required|exists:admins,id',
+            'komentar' => 'required|string|max:1000',
+        ]);
+
+        $komentar = RekognisiKomentar::create([
+            'rekognisi_dosen_id' => $request->rekognisi_dosen_id,
+            'id_admin' => $request->id_admin,
+            'komentar' => $request->komentar,
+        ]);
+
+        return response()->json([
+            'message' => 'Komentar berhasil ditambahkan.',
+            'data' => $komentar,
+        ], 201);
     }
     public function terimaRekognisi(Request $request, $id)
     {
