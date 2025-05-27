@@ -58,33 +58,32 @@ class AdminController extends Controller
         } else {
             $data = Dosen::all();
         }
-
         return response()->json($data);
     }
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'nidn' => 'required|string|unique:dosens,nidn',
             'jabatan' => 'required|string',
             'program_studi' => 'required|in:TI,PDSI',
             'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'email' => 'required|email|unique:dosens,email',
+            'password' => 'required|string|min:6',
         ]);
 
-        // Mengecek apakah ada file foto_profil yang diupload
+        $validated['password'] = bcrypt($validated['password']);
+
         if ($request->hasFile('foto_profil')) {
-            // Simpan file foto_profil dan ambil path-nya
             $path = $request->file('foto_profil')->store('foto_dosen', 'public');
             $validated['foto_profil'] = $path;
         }
 
-        // Simpan data dosen yang sudah divalidasi
         Dosen::create($validated);
 
-        // Return response JSON jika berhasil
         return response()->json(['message' => 'Dosen berhasil ditambahkan'], 201);
     }
+
     public function update(Request $request, Dosen $dosen)
     {
         $request->validate([
@@ -92,15 +91,24 @@ class AdminController extends Controller
             'nidn' => 'sometimes|required|string|unique:dosens,nidn,' . $dosen->id,
             'jabatan' => 'sometimes|required|string|max:255',
             'program_studi' => 'sometimes|required|in:TI,PDSI',
-            'foto_profil' => 'nullable|image|max:2048',
+            'foto_profil' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'email' => 'sometimes|required|email|unique:dosens,email,' . $dosen->id,
+            'password' => 'nullable|string|min:6',
         ]);
 
-        $data = $request->only(['nama', 'nidn', 'jabatan', 'program_studi']);
+        $data = $request->only(['nama', 'nidn', 'jabatan', 'program_studi', 'email']);
+
+        // Proses password hanya jika ada input password baru
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
 
         if ($request->hasFile('foto_profil')) {
+            // Hapus foto lama jika ada
             if ($dosen->foto_profil) {
                 Storage::disk('public')->delete($dosen->foto_profil);
             }
+            // Simpan foto baru
             $data['foto_profil'] = $request->file('foto_profil')->store('foto_dosen', 'public');
         }
 
@@ -111,6 +119,7 @@ class AdminController extends Controller
             'data' => $dosen
         ], 200);
     }
+
     public function destroy(Dosen $dosen)
     {
         $dosen->delete();
@@ -142,8 +151,11 @@ class AdminController extends Controller
         $status = $request->query('status_rekognisi');
         $tahun = $request->query('tahun');
         $type_rekognisi_id = $request->query('type_rekognisi_id');
-        $query = Rekognisi::with(relations: ['dosen', 'jenisRekognisi'])
+        $search = $request->query('search'); // Ambil query pencarian
+
+        $query = Rekognisi::with(['dosen', 'jenisRekognisi'])
             ->orderBy('created_at', 'desc');
+
         if ($status) {
             $query->where('status_rekognisi', $status);
         }
@@ -151,14 +163,41 @@ class AdminController extends Controller
         if ($tahun) {
             $query->whereYear('created_at', $tahun);
         }
+
         if ($type_rekognisi_id) {
             $query->where('type_rekognisi_id', $type_rekognisi_id);
+        }
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul_penelitian', 'like', '%' . $search . '%')
+                    ->orWhere('judul_penghargaan', 'like', '%' . $search . '%')
+                    ->orWhere('judul_pengabdian', 'like', '%' . $search . '%')
+                    ->orWhere('judul_publikasi', 'like', '%' . $search . '%')
+                    ->orWhere('judul_karya_hki', 'like', '%' . $search . '%');
+            });
         }
 
         $data = $query->get();
 
         return response()->json($data);
     }
+
+
+    public function rekognisiByType($type)
+    {
+        if (!in_array($type, [1, 2, 3, 4, 5])) {
+            return response()->json(['message' => 'Tipe tidak valid'], 400);
+        }
+
+        $data = Rekognisi::with(['dosen', 'jenisRekognisi'])
+            ->where('type_rekognisi_id', $type)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($data);
+    }
+
     public function rekognisiByKategori()
     {
         $rekap = DB::table('jenis_rekognisi')
@@ -178,38 +217,54 @@ class AdminController extends Controller
     public function showRekognisi($id)
     {
         $rekognisi = Rekognisi::with([
+            'jenisRekognisi',
             'dosen',
             'kolaborator.dosenKolaborator',
             'komentar.admin',
-            'files'
-        ])->findOrFail($id);
+            'files',
+        ])->find($id);
+
+        if (!$rekognisi) {
+            return response()->json([
+                'message' => 'Data rekognisi tidak ditemukan.'
+            ], 404);
+        }
 
         return response()->json($rekognisi);
-
     }
+
     public function tolakRekognisi(Request $request, $id)
     {
         $rekognisi = Rekognisi::findOrFail($id);
 
-        // Cek apakah status saat ini adalah 'diajukan'
-        if ($rekognisi->status_rekognisi !== 'diajukan') {
+        // Cek apakah sudah ditolak sebelumnya
+        if ($rekognisi->status_rekognisi === 'ditolak') {
             return response()->json([
-                'message' => 'Rekognisi hanya bisa ditolak jika statusnya diajukan.'
+                'message' => 'Rekognisi sudah ditolak sebelumnya.'
             ], 422);
         }
 
+        // Hanya izinkan penolakan jika status saat ini adalah 'diajukan'
+        if ($rekognisi->status_rekognisi !== 'diajukan') {
+            return response()->json([
+                'message' => 'Rekognisi hanya bisa ditolak jika statusnya masih diajukan.'
+            ], 422);
+        }
+
+        // Validasi input
         $request->validate([
             'id_admin_tolak' => 'required|integer|exists:admins,id',
             'alasan_tolak' => 'required|string|max:255',
         ]);
 
+        // Update data
         $rekognisi->status_rekognisi = 'ditolak';
         $rekognisi->id_admin_tolak = $request->input('id_admin_tolak');
         $rekognisi->alasan_tolak = $request->input('alasan_tolak');
         $rekognisi->save();
 
         return response()->json([
-            'message' => 'Rekognisi berhasil ditolak',
+            'message' => 'Rekognisi berhasil ditolak.',
             'data' => $rekognisi
         ], 200);
     }
@@ -326,11 +381,43 @@ class AdminController extends Controller
     public function dashboardStatistik(): JsonResponse
     {
         return response()->json([
-            'jumlah_dosen' => Dosen::count(),
-            'jumlah_rekognisi' => Rekognisi::count(),
-            'rekognisi_disetujui' => Rekognisi::where('status_rekognisi', 'Disetujui')->count(),
-            'rekognisi_ditolak' => Rekognisi::where('status_rekognisi', 'Ditolak')->count(),
-            // 'rekognisi_pending' => Rekognisi::where('status_rekognisi', 'Pending')->count(),
+            'jumlah_dosen' => (int) Dosen::count(),
+            'jumlah_rekognisi' => (int) Rekognisi::count(),
+            'rekognisi_disetujui' => (int) Rekognisi::where('status_rekognisi', 'disetujui')->count(),
+            'rekognisi_ditolak' => (int) Rekognisi::where('status_rekognisi', 'ditolak')->count(),
+            'rekognisi_diajukan' => (int) Rekognisi::where('status_rekognisi', 'diajukan')->count(),
         ]);
     }
+    public function notifications()
+    {
+        $rekognisiList = Rekognisi::with(['dosen', 'files'])
+            ->whereIn('status_rekognisi', ['diajukan', 'disimpan'])
+            ->get();
+
+        $notifications = $rekognisiList->map(function ($rekognisi) {
+            $namaDosen = $rekognisi->dosen->nama ?? 'Dosen tidak dikenal';
+
+            if ($rekognisi->status_rekognisi === 'diajukan') {
+                $reason = $rekognisi->files->count() == 0
+                    ? "$namaDosen mengajukan rekognisi tapi belum ada file bukti"
+                    : "$namaDosen mengajukan rekognisi";
+            } elseif ($rekognisi->status_rekognisi === 'disimpan') {
+                $reason = "$namaDosen menyimpan rekognisi tapi belum diajukan";
+            } else {
+                $reason = "$namaDosen memiliki status rekognisi: {$rekognisi->status_rekognisi}";
+            }
+
+            return [
+                'id' => $rekognisi->id,
+                'nama' => $namaDosen,
+                'reason' => $reason,
+                'created_at' => $rekognisi->created_at->format('Y-m-d H:i:s'), // format tanggal
+            ];
+        });
+
+        return response()->json($notifications);
+    }
+
+
+
 }

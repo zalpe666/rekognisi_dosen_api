@@ -40,31 +40,31 @@ class RekognisiController extends Controller
             'id_dosen' => 'required|integer|exists:dosens,id',
             'type_rekognisi_id' => 'required|exists:jenis_rekognisi,id',
             // 1.Penelitian Dosen
-            'jabatan_penelitian' => 'nullable|string',
-            'judul_penelitian' => 'nullable|string',
-            'besaran_dana_penelitian' => 'nullable|integer',
-            'sumber_dana_penelitian' => 'nullable|string',
+                'jabatan_penelitian' => 'nullable|string',
+                'judul_penelitian' => 'nullable|string',
+                'besaran_dana_penelitian' => 'nullable|integer',
+                'sumber_dana_penelitian' => 'nullable|string',
             // 2.Penghargaan Dosen
-            'tingkat_penghargaan' => 'nullable|string',
-            'judul_penghargaan' => 'nullable|string',
-            'instansi_pemberi_penghargaan' => 'nullable|string',
+                'tingkat_penghargaan' => 'nullable|string',
+                'judul_penghargaan' => 'nullable|string',
+                'instansi_pemberi_penghargaan' => 'nullable|string',
             // 3.Pengabdian Dosen
-            'jenis_kegiatan_pengabdian' => 'nullable|string',
-            'judul_pengabdian' => 'nullable|string',
-            'lokasi_pengabdian' => 'nullable|string',
-            'sumber_dana_pengabdian' => 'nullable|string',
+                'jenis_kegiatan_pengabdian' => 'nullable|string',
+                'judul_pengabdian' => 'nullable|string',
+                'lokasi_pengabdian' => 'nullable|string',
+                'sumber_dana_pengabdian' => 'nullable|string',
             // 4.Publikasi Dosen
-            'jenis_publikasi' => 'nullable|string',
-            'judul_publikasi' => 'nullable|string',
-            'nama_jurnal_publikasi' => 'nullable|string',
-            'tahun_terbit_issn_publikasi' => 'nullable|string',
+                'jenis_publikasi' => 'nullable|string',
+                'judul_publikasi' => 'nullable|string',
+                'nama_jurnal_publikasi' => 'nullable|string',
+                'tahun_terbit_issn_publikasi' => 'nullable|string',
             // 5.HKI Dosen
-            'nama_pemilik_hki' => 'nullable|string',
-            'judul_karya_hki' => 'nullable|string',
-            'jenis_hki' => 'nullable|string',
-            'tanggal_pengajuan_penerbitan_hki' => 'nullable|string',
+                'nama_pemilik_hki' => 'nullable|string',
+                'judul_karya_hki' => 'nullable|string',
+                'jenis_hki' => 'nullable|string',
+                'tanggal_pengajuan_penerbitan_hki' => 'nullable|string',
             // end
-            'bukti' => 'nullable|file|max:2048',
+                'bukti' => 'nullable|file|max:2048',
         ]);
 
         if ($request->hasFile('bukti')) {

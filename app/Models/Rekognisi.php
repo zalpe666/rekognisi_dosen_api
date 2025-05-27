@@ -59,18 +59,13 @@ class Rekognisi extends Model
     {
         return $this->belongsTo(JenisRekognisi::class, 'type_rekognisi_id')->select('id', 'nama');
     }
-    public function adminUmpanBalik()
-    {
-        return $this->belongsTo(Admin::class, 'id_admin_umpan_balik')->select('id', 'name');
-    }
-
     public function adminHapus()
     {
         return $this->belongsTo(Admin::class, 'id_admin_hapus')->select('id', 'name');
     }
     public function kolaborator()
     {
-        return $this->hasMany(RekognisiKolaborator::class, 'rekognisi_dosen_id');
+        return $this->hasMany(RekognisiKolabolator::class, 'rekognisi_dosen_id');
     }
     public function komentar()
     {

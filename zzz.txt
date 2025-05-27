@@ -77,3 +77,9 @@ dapat melihat informasi visi, misi, dan tujuan fakultas, agar saya dapat memaham
 dapat melihat daftar dosen lain di program studi saya, agar saya mengetahui rekan-rekan sejawat yang satu bidang dan bisa berkolaborasi dalam kegiatan tridharma.
 dapat melihat data profil singkat dosen seperti nama, NIDN, dan jabatan fungsional, agar saya bisa mengenal struktur akademik dan senioritas di lingkungan prodi.
 dapat melihat data dosen berdasarkan program studi secara terpisah (TI dan PDSI), agar saya hanya melihat dosen yang relevan dengan bidang saya.
+
+
+18|aLz0EOO9mPYKUsd9wsRSNzPn1AxKIPSjXNgonI4s93545377 ->dosen asli (6)
+19|ujXrBsKlbKysK8GZXYKMgkJIgpXw4lsp51U4VcUI65350fc3 -> dosen zalpe (10)
+
+buat agar rekognisi hanya bisa dilihat oleh dosen yg bersangkutan

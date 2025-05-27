@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RekognisiKolaborator extends Model
+class RekognisiKolabolator extends Model
 {
     protected $table = 'rekognisi_dosen_kolaborator';
     public $timestamps = true;

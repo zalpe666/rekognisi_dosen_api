@@ -19,5 +19,7 @@ class Dosen extends Model
         'jabatan',
         'foto_profil',
         'program_studi',
+        'email',
+        'password',
     ];
 }
