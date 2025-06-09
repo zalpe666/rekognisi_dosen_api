@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('rekognisi_dosen_id')->constrained('rekognisi_dosen')->onDelete('cascade');
             $table->foreignId('id_dosen')->constrained('dosens')->onDelete('cascade');
             $table->string('file');
+            $table->string('nama_file');
             $table->timestamps();
             $table->softDeletes(); 
         });

@@ -14,47 +14,46 @@ class Rekognisi extends Model
     protected $fillable = [
         'id_dosen',
         'type_rekognisi_id',
-        // 1. Penelitian Dosen
-        'jabatan_penelitian',
+        'status_rekognisi',
+        // Rekognisi Dosen 
+        'nama_rekognisi',
+        'tempat_rekognisi',
+        'waktu_rekognisi',
+        'keterangan_rekognisi',
+        // Penelitian Dosen
         'judul_penelitian',
+        'jabatan_penelitian',
         'besaran_dana_penelitian',
         'sumber_dana_penelitian',
-        // 2. Penghargaan Dosen
-        'tingkat_penghargaan',
-        'judul_penghargaan',
-        'instansi_pemberi_penghargaan',
-        // 3. Pengabdian dosen
-        'jenis_kegiatan_pengabdian',
+        // Pengabdian dosen
         'judul_pengabdian',
+        'jenis_kegiatan_pengabdian',
         'lokasi_pengabdian',
         'sumber_dana_pengabdian',
-        // 4. Publikasi Dosen
-        'jenis_publikasi',
+        // Publikasi Dosen
         'judul_publikasi',
+        'jenis_publikasi',
         'nama_jurnal_publikasi',
         'tahun_terbit_issn_publikasi',
-        // 5. HKI Dosen    
-        'nama_pemilik_hki',
+        // HKI Dosen    
         'judul_karya_hki',
+        'nama_pemilik_hki',
         'jenis_hki',
         'tanggal_pengajuan_penerbitan_hki',
-        // end
-        'judul_penelitian',
-        'bukti',
-        'status_rekognisi',
-        'umpan_balik',
-        'id_admin_umpan_balik',
-        'alasan_tolak',
+        // All
+        'id_admin_terima',
         'id_admin_tolak',
-        'id_admin_hapus'
+        'id_admin_hapus',
+        'alasan_tolak',
     ];
     protected $dates = ['deleted_at'];
 
     public function dosen()
     {
-        return $this->belongsTo(Dosen::class, foreignKey: 'id_dosen')
-            ->select('id', 'nama');
+        return $this->belongsTo(Dosen::class, 'id_dosen')
+            ->select('id', 'nama', 'jabatan');
     }
+
     public function jenisRekognisi()
     {
         return $this->belongsTo(JenisRekognisi::class, 'type_rekognisi_id')->select('id', 'nama');
@@ -63,7 +62,7 @@ class Rekognisi extends Model
     {
         return $this->belongsTo(Admin::class, 'id_admin_hapus')->select('id', 'name');
     }
-    public function kolaborator()
+    public function kolabolator()
     {
         return $this->hasMany(RekognisiKolabolator::class, 'rekognisi_dosen_id');
     }

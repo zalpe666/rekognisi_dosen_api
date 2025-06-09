@@ -44,8 +44,8 @@ Route::prefix('dosen')->group(function () {
     Route::get('/rekognisi-saya', [DosenController::class, 'rekognisiSaya'])->middleware('auth:sanctum');
     Route::get('/rekognisi-saya/show/{id}', [DosenController::class, 'showRekognisi'])->middleware('auth:sanctum');
     Route::post('/rekognisi-saya/file', [DosenController::class, 'storeFile'])->middleware('auth:sanctum');
+    Route::get('/rekognisi-saya/search', [DosenController::class, 'searchRekognisi'])->middleware('auth:sanctum');
     Route::post('/rekognisi-saya/tambah/kolabolator', [DosenController::class, 'addKolabolator'])->middleware('auth:sanctum');
-    
     Route::post('/buat-surat-tugas', [DosenController::class, 'buatSuratTugas']);
 });
 // Route::post('/rekognisi', action: [RekognisiController::class, 'store']);

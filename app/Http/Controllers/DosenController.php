@@ -70,18 +70,19 @@ class DosenController extends Controller
     }
     public function rekognisiSaya(Request $request)
     {
-        /** @var \App\Models\Dosen $user */
         $id = auth()->user()->id;
-
         $status = $request->status;
         $tahun = $request->tahun;
         $type_rekognisi_id = $request->type_rekognisi_id;
 
-        $rekognisi = Rekognisi::with(['dosen'])
+        $rekognisi = Rekognisi::with(['dosen', 'jenisRekognisi'])
+
             ->where(function ($query) use ($id) {
                 $query->where('id_dosen', $id)
-                    ->orWhereHas('kolaborator', function ($subQuery) use ($id) {
-                        $subQuery->where('id_dosen_kolaborator', $id);
+                    // Perbaikan di sini: 'kolabolator' seharusnya 'kolaborator'
+                    ->orWhereHas('kolabolator', function ($subQuery) use ($id) {
+                        // Perbaikan di sini: 'id_dosen_kolabolator' seharusnya 'id_dosen_kolabolator'
+                        $subQuery->where('id_dosen_kolabolator', $id);
                     });
             })
             ->when($status, function ($query) use ($status) {
@@ -100,11 +101,13 @@ class DosenController extends Controller
         ]);
     }
 
-    public function showRekognisi($id)
+    public function showRekognisi($id) // $id adalah id rekognisi
     {
+        $userId = auth()->user()->id;
+
         $rekognisi = Rekognisi::with([
             'dosen',
-            'kolaborator.dosenKolaborator',
+            'kolabolator.dosenKolabolator',
             'komentar.admin',
             'files'
         ])->find($id);
@@ -113,21 +116,60 @@ class DosenController extends Controller
             return response()->json(['message' => 'Data tidak ditemukan'], 404);
         }
 
-        $userId = auth()->user()->id;
-
         $isOwner = $rekognisi->id_dosen === $userId;
 
-        $isCollaborator = $rekognisi->kolaborator->contains(function ($kolaborator) use ($userId) {
-            return $kolaborator->id_dosen_kolaborator === $userId;
-        });
+        $isCollaborator = $rekognisi->kolabolator?->contains(function ($kolabolator) use ($userId) {
+            return $kolabolator->id_dosen_kolabolator === $userId;
+        }) ?? false;
 
         if (!($isOwner || $isCollaborator)) {
-            return response()->json(['message' => 'Akses ditolak. Anda bukan pemilik atau kolaborator rekognisi ini.'], 403);
+            return response()->json(['message' => 'Akses ditolak. Anda bukan pemilik atau kolabolator rekognisi ini.'], 403);
         }
 
         return response()->json($rekognisi);
     }
 
+    public function searchRekognisi(Request $request)
+    {
+        /** @var \App\Models\Dosen $user */
+        $id = auth()->user()->id;
+
+        $keyword = $request->keyword;
+        $status = $request->status;
+        $tahun = $request->tahun;
+        $type_rekognisi_id = $request->type_rekognisi_id;
+
+        $rekognisi = Rekognisi::with(['dosen'])
+            ->where(function ($query) use ($id) {
+                $query->where('id_dosen', $id)
+                    ->orWhereHas('kolaborator', function ($subQuery) use ($id) {
+                        $subQuery->where('id_dosen_kolaborator', $id);
+                    });
+            })
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->where(function ($subQuery) use ($keyword) {
+                    $subQuery->Where('judul_penelitian', 'like', '%' . $keyword . '%')
+                        ->orWhere('judul_penghargaan', 'like', '%' . $keyword . '%')
+                        ->orWhere('judul_pengabdian', 'like', '%' . $keyword . '%')
+                        ->orWhere('judul_publikasi', 'like', '%' . $keyword . '%')
+                        ->orWhere('judul_karya_hki', 'like', '%' . $keyword . '%');
+                });
+            })
+            ->when($status, function ($query) use ($status) {
+                $query->where('status_rekognisi', $status);
+            })
+            ->when($tahun, function ($query) use ($tahun) {
+                $query->whereYear('created_at', $tahun);
+            })
+            ->when($type_rekognisi_id, function ($query) use ($type_rekognisi_id) {
+                $query->where('type_rekognisi_id', $type_rekognisi_id);
+            })
+            ->get();
+
+        return response()->json([
+            'rekognisi' => $rekognisi
+        ]);
+    }
     public function storeFile(Request $request)
     {
         $request->validate([
@@ -138,12 +180,12 @@ class DosenController extends Controller
 
         $userId = auth()->user()->id;
 
-        $rekognisi = Rekognisi::with('kolaborator')
+        $rekognisi = Rekognisi::with('kolabolator')
             ->where('id', $request->rekognisi_dosen_id)
             ->where(function ($query) use ($userId) {
                 $query->where('id_dosen', $userId)
-                    ->orWhereHas('kolaborator', function ($subQuery) use ($userId) {
-                        $subQuery->where('id_dosen_kolaborator', $userId);
+                    ->orWhereHas('kolabolator', function ($subQuery) use ($userId) {
+                        $subQuery->where('id_dosen_kolabolator', $userId);
                     });
             })
             ->first();
@@ -319,7 +361,7 @@ class DosenController extends Controller
         $userId = auth()->user()->id;
 
         // Ambil data rekognisi
-        $rekognisi = Rekognisi::with('kolaborator')
+        $rekognisi = Rekognisi::with('kolabolator')
             ->where('id', $request->rekognisi_dosen_id)
             ->first();
 

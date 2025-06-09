@@ -10,10 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('rekognisi_dosen_kolaborator', function (Blueprint $table) {
+        Schema::create('rekognisi_dosen_kolabolator', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rekognisi_dosen_id')->constrained('rekognisi_dosen')->onDelete('cascade');
-            $table->foreignId('id_dosen_kolaborator')->constrained('dosens')->onDelete('cascade');
+            $table->foreignId('id_dosen_kolabolator')->constrained('dosens')->onDelete('cascade');
             $table->timestamps();
         });
     }

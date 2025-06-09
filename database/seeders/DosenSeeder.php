@@ -14,12 +14,29 @@ class DosenSeeder extends Seeder
     public function run(): void
     {
         Dosen::create([
-            'email' => 'dosen@gmail.com',
-            'password' => Hash::make('dosen123'),
-            'nama' => 'Dosen Admin',
-            'nidn'  => '1234567890',
+            'email' => 'elan@gmail.com',
+            'password' => Hash::make('elan123'),
+            'nama' => 'Elan Suherlan',
+            'nidn' => '1234567890',
             'Jabatan' => 'Dosen Tetap',
             'program_studi' => 'TI',
+        ]);
+        Dosen::create([
+            'email' => 'ujang@gmail.com',
+            'password' => Hash::make('ujang123'),
+            'nama' => 'Ujang Muhammad',
+            'nidn' => '1234567888',
+            'Jabatan' => 'Dosen Tetap',
+            'program_studi' => 'TI',
+        ]);
+
+        Dosen::create([
+            'email' => 'zalpe@gmail.com',
+            'password' => Hash::make('zalpe123'),
+            'nama' => 'Zalpe Rabbani',
+            'nidn' => '0987654321',
+            'Jabatan' => 'Asisten Ahli',
+            'program_studi' => 'PDSI',
         ]);
     }
 }

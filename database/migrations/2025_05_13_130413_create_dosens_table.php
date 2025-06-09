@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->string('nama');
             $table->string('nidn')->unique();
+            $table->string('email')->unique();
+            $table->string('password');
             $table->string('jabatan');
             $table->string('foto_profil')->nullable(); // disimpan dalam bentuk path ke file
             $table->enum('program_studi', ['TI', 'PDSI']);

@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class RekognisiKolabolator extends Model
 {
-    protected $table = 'rekognisi_dosen_kolaborator';
+    protected $table = 'rekognisi_dosen_kolabolator';
     public $timestamps = true;
 
     protected $fillable = [
         'rekognisi_dosen_id',
-        'id_dosen_kolaborator',
+        'id_dosen_kolabolator',
     ];
 
     public function rekognisi()
@@ -19,9 +19,9 @@ class RekognisiKolabolator extends Model
         return $this->belongsTo(Rekognisi::class, 'rekognisi_dosen_id');
     }
 
-    public function dosenKolaborator()
+    public function dosenKolabolator()
     {
-        return $this->belongsTo(Dosen::class, 'id_dosen_kolaborator')->select('id', 'nama');
+        return $this->belongsTo(Dosen::class, 'id_dosen_kolabolator')->select('id', 'nama');
     }
 
 }

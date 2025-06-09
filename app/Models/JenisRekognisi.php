@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class JenisRekognisi extends Model
 {
     use HasFactory;
-    protected $table = 'jenis_rekognisi'; // <- pastikan ini sesuai dengan nama tabel di DB
+    protected $table = 'jenis_rekognisi';
 
     protected $fillable = ['nama'];
 
